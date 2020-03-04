@@ -56,6 +56,7 @@ class Train
 
   def move_next_station
     return if train_last_station?
+
     leave_station
     @route.route_list[@current_route_index += 1].add_train(self)
   end
