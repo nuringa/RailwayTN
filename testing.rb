@@ -10,47 +10,44 @@ station4 = Station.new('Mid3')
 station5 = Station.new('Mid4')
 
 # p station1
-
 route = Route.new(station1, station2)
 route.add_midway_station(station3)
 route.add_midway_station(station4)
 route.add_midway_station(station5)
 
-
 train1 = Train.new(111, 'cargo', 13)
 train2 = Train.new(222, 'passenger', 5)
-
 
 # модель Train
 train1.set_route(route)
 
 p 'first station'
-p train1.current_stop.name
+p train1.current_station.name
 
 p 'step forward'
-train1.move_train('next')
-p train1.current_stop.name
+train1.move_next_station
+p train1.current_station.name
 p 'delete train from prev station'
 p station1
 p 'add train to next station'
 p route.route_list[1]
 
-train1.move_train('next')
-p train1.current_stop.name
+train1.move_next_station
+p train1.current_station.name
 
-train1.move_train('next')
-p train1.current_stop.name
+train1.move_next_station
+p train1.current_station.name
 
-train1.move_train('back')
-p train1.current_stop.name
+train1.move_previous_station
+p train1.current_station.name
 
-train1.move_train('next')
-p train1.current_stop.name
+train1.move_next_station
+p train1.current_station.name
 
-train1.move_train('next')
-p train1.current_stop.name
+train1.move_next_station
+p train1.current_station.name
 
-p train1.current_stop.name
+p train1.current_station.name
 p train1.next_stop
 p train1.previous_stop
 

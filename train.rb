@@ -1,5 +1,5 @@
 class Train
-  attr_accessor :wagon_count, :current_stop, :speed
+  attr_accessor :wagon_count, :speed
 
   attr_reader :type
 
@@ -32,32 +32,39 @@ class Train
 
   def set_route(route)
     @route = route
-    @current_stop = @route.first_station
-    set_train_to_station
+    @route.first_station.add_train(self)
     @current_route_index = 0
   end
 
-  def set_train_to_station
-    current_stop.add_train(self)
+  def current_station
+    @route.route_list.detect do |station|
+      station.trains.include?(self)
+    end
   end
 
   def train_first_station?
-    @current_stop == @route.first_station
+    current_station == @route.first_station
   end
 
   def train_last_station?
-    @current_stop == @route.last_station
+    current_station == @route.last_station
   end
 
-  def move_train(direction)
-    if direction == 'next' && !self.train_last_station?
-      current_stop.send_train(self)
-      self.current_stop = @route.route_list[@current_route_index += 1]
-    elsif direction == 'back' && !self.train_first_station?
-      current_stop.send_train(self)
-      self.current_stop =@route.route_list[@current_route_index -= 1]
-    end
-    set_train_to_station
+  def leave_station
+    current_station.send_train(self)
+  end
+
+  def move_next_station
+    return if train_last_station?
+    leave_station
+    @route.route_list[@current_route_index += 1].add_train(self)
+  end
+
+  def move_previous_station
+    return if train_first_station?
+
+    leave_station
+    @route.route_list[@current_route_index -= 1].add_train(self)
   end
 
   def previous_stop
