@@ -1,13 +1,12 @@
 class Train
-  attr_accessor :wagon_count, :speed
+  attr_accessor :speed
 
-  attr_reader :type
+  attr_reader :number, :wagons, :route
 
-  def initialize(number, type, wagon_count)
+  def initialize(number)
     @number = number
-    @type = type
-    @wagon_count = wagon_count
     @speed = 0
+    @wagons = []
   end
 
   def speed_up(speed)
@@ -22,12 +21,12 @@ class Train
     speed > 0
   end
 
-  def add_wagon
-    self.wagon_count += 1 unless in_motion?
+  def add_wagon(wagon)
+    @wagons << wagon
   end
 
   def remove_wagon
-    @wagon_count -= 1 unless in_motion?
+    @wagons.pop unless in_motion?
   end
 
   def set_route(route)
@@ -37,7 +36,7 @@ class Train
   end
 
   def current_station
-    @route.route_list.detect do |station|
+    @route.route_stations.detect do |station|
       station.trains.include?(self)
     end
   end
@@ -58,14 +57,14 @@ class Train
     return if train_last_station?
 
     leave_station
-    @route.route_list[@current_route_index += 1].add_train(self)
+    @route.route_stations[@current_route_index += 1].add_train(self)
   end
 
   def move_previous_station
     return if train_first_station?
 
     leave_station
-    @route.route_list[@current_route_index -= 1].add_train(self)
+    @route.route_stations[@current_route_index -= 1].add_train(self)
   end
 
   def previous_stop
