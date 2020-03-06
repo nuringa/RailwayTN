@@ -23,8 +23,4 @@ class Route
   def route_stations_list
     "#{first_station.name}->" + midway_stations.map { |station| "#{station.name}" }.join('->') + "->#{last_station.name}"
   end
-
-  def route_empty?
-    midway_stations.empty?
-  end
 end

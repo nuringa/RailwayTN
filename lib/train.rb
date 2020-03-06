@@ -1,6 +1,5 @@
 class Train
   attr_accessor :speed
-
   attr_reader :number, :wagons, :route
 
   def initialize(number)
@@ -17,12 +16,10 @@ class Train
     self.speed = 0
   end
 
-  def in_motion?
-    speed > 0
-  end
-
   def add_wagon(wagon)
-    @wagons << wagon
+    if check_class(wagon)
+      @wagons << wagon unless in_motion?
+    end
   end
 
   def remove_wagon
@@ -39,18 +36,6 @@ class Train
     @route.route_stations.detect do |station|
       station.trains.include?(self)
     end
-  end
-
-  def train_first_station?
-    current_station == @route.first_station
-  end
-
-  def train_last_station?
-    current_station == @route.last_station
-  end
-
-  def leave_station
-    current_station.send_train(self)
   end
 
   def move_next_station
@@ -73,5 +58,22 @@ class Train
 
   def next_stop
     @route.route_list[@current_route_index + 1] unless train_last_station?
+  end
+
+  private
+  def in_motion?
+    speed > 0
+  end
+
+  def train_first_station?
+    current_station == @route.first_station
+  end
+
+  def train_last_station?
+    current_station == @route.last_station
+  end
+
+  def leave_station
+    current_station.send_train(self)
   end
 end
