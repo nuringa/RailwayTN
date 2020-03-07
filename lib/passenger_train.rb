@@ -2,6 +2,6 @@ class PassengerTrain < Train
   private
 
   def type?(wagon)
-    wagon.is_a?(PassengerWagon)
+    wagon.instance_of?(PassengerWagon)
   end
 end
