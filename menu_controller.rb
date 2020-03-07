@@ -47,6 +47,8 @@ class MenuController
     @routes = seed.routes
   end
 
+  private
+
   def station_add_menu
     puts 'Введите название:'
     station_name = gets.chomp
@@ -61,9 +63,9 @@ class MenuController
     train_number = gets.chomp
     case user_choice
     when 1
-      @trains << PassengerTrain.new(train_number)
+      @trains << Train.new(train_number, :passenger)
     when 2
-      @trains << CargoTrain.new(train_number)
+      @trains << Train.new(train_number, :cargo)
     end
     puts "Добавлен поезд #{train_number}"
   end

@@ -1,2 +1,1 @@
-class Wagon
-end
+class Wagon; end

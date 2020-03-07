@@ -1,8 +1,9 @@
 class Train
   attr_accessor :speed
-  attr_reader :number, :wagons, :route
+  attr_reader :number, :wagons, :route, :type
 
-  def initialize(number)
+  def initialize(number, type)
+    type == :cargo ? @type = 'Грузовой' : @type = 'Пассажирский'
     @number = number
     @speed = 0
     @wagons = []
@@ -17,13 +18,11 @@ class Train
   end
 
   def add_wagon(wagon)
-    if check_class(wagon)
-      @wagons << wagon unless in_motion?
-    end
+    @wagons << wagon if not_moving? && type?(wagon)
   end
 
   def remove_wagon
-    @wagons.pop unless in_motion?
+    @wagons.pop if not_moving?
   end
 
   def set_route(route)
@@ -61,8 +60,8 @@ class Train
   end
 
   private
-  def in_motion?
-    speed > 0
+  def not_moving?
+    speed == 0
   end
 
   def train_first_station?

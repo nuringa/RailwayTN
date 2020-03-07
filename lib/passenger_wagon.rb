@@ -1,2 +1,1 @@
-class PassengerWagon < Wagon
-end
+class PassengerWagon < Wagon; end
