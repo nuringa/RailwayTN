@@ -1,4 +1,6 @@
 class Train
+  include Manufacturer
+
   attr_accessor :speed
   attr_reader :number, :wagons, :route, :type
 

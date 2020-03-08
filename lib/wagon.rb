@@ -1,1 +1,3 @@
-class Wagon; end
+class Wagon
+  include Manufacturer
+end
