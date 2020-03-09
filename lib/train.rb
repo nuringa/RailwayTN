@@ -1,14 +1,24 @@
 class Train
   include Manufacturer
+  include InstanceCounter
 
   attr_accessor :speed
   attr_reader :number, :wagons, :route, :type
+
+  @@trains = {}
+
+  def self.find(train_number)
+    # @@trains.detect { |train| train.number == train_number}
+    @@trains[train_number]
+  end
 
   def initialize(number, type)
     type == :cargo ? @type = 'Грузовой' : @type = 'Пассажирский'
     @number = number
     @speed = 0
     @wagons = []
+    @@trains[number] = self
+    register_instance
   end
 
   def speed_up(speed)

@@ -1,4 +1,6 @@
 class Route
+  include Manufacturer
+
   attr_reader :first_station, :last_station, :route_name, :midway_stations
 
   def initialize(first_station, last_station)
@@ -6,6 +8,7 @@ class Route
     @last_station = last_station
     @midway_stations = []
     @route_name = "#{first_station.name}->#{last_station.name}"
+    register_instance
   end
 
   def add_midway_station(station)

@@ -177,7 +177,7 @@ class MenuController
 
   def train_move_menu
     train = set_train
-    puts "Поезд движется: 1. Вперед  2. Назад"
+    puts 'Поезд движется: 1. Вперед  2. Назад'
     user_choice = gets.to_i
     if user_choice == 1
       train.move_next_station
