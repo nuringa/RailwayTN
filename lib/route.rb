@@ -1,5 +1,5 @@
 class Route
-  include Manufacturer
+  include InstanceCounter
 
   attr_reader :first_station, :last_station, :route_name, :midway_stations
 

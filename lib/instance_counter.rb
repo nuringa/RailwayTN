@@ -3,6 +3,7 @@ module InstanceCounter
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
+
   module ClassMethods
     attr_accessor :instances
 
@@ -10,6 +11,7 @@ module InstanceCounter
       @instances ||= 0
     end
   end
+
   module InstanceMethods
     private
 
