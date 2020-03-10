@@ -1,5 +1,6 @@
 class Station
   include InstanceCounter
+  include Validator
 
   attr_reader :trains, :name
 
@@ -11,6 +12,7 @@ class Station
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
     @@stations << self
     register_instance
@@ -30,5 +32,10 @@ class Station
 
   def passanger_trains
     trains.select { |train| train.type == 'passenger'}
+  end
+
+  private
+  def validate!
+    raise 'Название слишком короткое или длинное' unless (3..40).include?(name.length)
   end
 end

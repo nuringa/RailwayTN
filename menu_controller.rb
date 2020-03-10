@@ -59,13 +59,18 @@ class MenuController
   def train_add_menu
     puts 'Какой поезд Вы хотите создать? 1. Пассажирский 2. Грузовой'
     user_choice = gets.to_i
-    puts 'Введите номер поезда'
-    train_number = gets.chomp
-    case user_choice
-    when 1
-      @trains << Train.new(train_number, :passenger)
-    when 2
-      @trains << Train.new(train_number, :cargo)
+    begin
+      puts 'Введите номер поезда'
+      train_number = gets.chomp
+      case user_choice
+      when 1
+        @trains << Train.new(train_number, :passenger)
+      when 2
+        @trains << Train.new(train_number, :cargo)
+      end
+    rescue RuntimeError => e
+      puts e.message
+      retry
     end
     puts "Добавлен поезд #{train_number}"
   end
