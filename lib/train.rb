@@ -15,7 +15,7 @@ class Train
   end
 
   def initialize(number, type)
-    type == :cargo ? @type = 'Грузовой' : @type = 'Пассажирский'
+    @type = type == :cargo ? 'Грузовой' : 'Пассажирский'
     @number = number
     validate!
     @speed = 0
@@ -32,8 +32,14 @@ class Train
     self.speed = 0
   end
 
+  def each_wagon(&block)
+    wagons.each do |wagon|
+      block.call(wagon)
+    end
+  end
+
   def add_wagon(wagon)
-    @wagons << wagon if not_moving? && type?(wagon)
+    @wagons << wagon if not_moving?
   end
 
   def remove_wagon
@@ -67,11 +73,15 @@ class Train
   end
 
   def previous_stop
-    @route.route_list[@current_route_index - 1] unless train_first_station?
+    @route.route_stations_list[@current_route_index - 1] unless train_first_station?
   end
 
   def next_stop
-    @route.route_list[@current_route_index + 1] unless train_last_station?
+    @route.route_stations_list[@current_route_index + 1] unless train_last_station?
+  end
+
+  def to_s
+    "Поезд№#{number}, #{type}, #{wagons.count} вагонов"
   end
 
   private
@@ -82,7 +92,7 @@ class Train
   end
 
   def not_moving?
-    speed == 0
+    speed.zero?
   end
 
   def train_first_station?

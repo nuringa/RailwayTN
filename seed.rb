@@ -12,6 +12,13 @@ class Seed
     @trains << CargoTrain.new('Car-go', :cargo) << PassengerTrain.new('Pas-er', :passenger)
     @routes << Route.new(stations.first, stations.last)
 
+    6.times do
+      @trains[0].wagons << CargoWagon.new
+    end
+    @trains[0].wagons[0].add_cargo(50)
+    @trains[0].wagons[1].add_cargo(10)
+    @trains[0].wagons[2].add_cargo(60)
+
     @routes.first.add_midway_station(stations[1])
     @routes.first.add_midway_station(stations[2])
   end

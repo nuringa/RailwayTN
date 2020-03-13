@@ -26,15 +26,22 @@ class Station
     trains.delete(train)
   end
 
+  def each_train(&block)
+    trains.each do |train|
+      block.call(train)
+    end
+  end
+
   def cargo_trains
     trains.select { |train| train.type == 'cargo'}
   end
 
-  def passanger_trains
+  def passenger_trains
     trains.select { |train| train.type == 'passenger'}
   end
 
   private
+
   def validate!
     raise 'Название слишком короткое или длинное' unless (3..40).include?(name.length)
   end

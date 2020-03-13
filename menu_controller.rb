@@ -27,13 +27,19 @@ class MenuController
     when 7
       wagon_remove_menu
     when 8
-      train_move_menu
+      wagon_occupy_space
     when 9
-      station_train_list
+      train_move_menu
     when 10
-      seed
-      puts 'Данные созданы'
+      stations_list(@stations)
     when 11
+      train_list_menu
+    when 12
+      wagon_list_menu
+    when 13
+      seed
+      seed_message
+    when 14
       exit
     else
       puts 'Неправильная команда'
@@ -54,6 +60,12 @@ class MenuController
     station_name = gets.chomp
     @stations << Station.new(station_name)
     puts "Добавлена станция #{station_name}"
+  end
+
+  def set_station
+    puts 'Выберите станцию:'
+    stations_list(@stations)
+    @stations[gets.to_i - 1]
   end
 
   def train_add_menu
@@ -141,6 +153,23 @@ class MenuController
     @trains[gets.to_i - 1]
   end
 
+  def train_list_menu
+    station = set_station
+    trains_station_list(station)
+  end
+
+  def set_wagon(train)
+    wagons_count = train.wagons.size
+    wagons_list(train)
+    puts "Введите номер вагона(1-#{wagons_count})"
+    train.wagons.any? ? train.wagons[gets.to_i - 1] : return
+  end
+
+  def wagon_list_menu
+    train = set_train
+    wagons_list(train)
+  end
+
   def train_route_menu
     if @trains.any? && @routes.any?
       route = set_route
@@ -158,13 +187,18 @@ class MenuController
     quantity = gets.to_i
 
     if train.instance_of?(CargoTrain)
+      wagon_volume_input
+      volume = gets.to_i
       quantity.times do
-        train.add_wagon(CargoWagon.new)
+        train.add_wagon(CargoWagon.new(volume))
       end
     else
-      quantity.times { train.add_wagon(PassengerWagon.new) }
+      wagon_seats_input
+      seats = gets.to_i
+      quantity.times { train.add_wagon(PassengerWagon.new(seats)) }
+
     end
-    train_with_wagons_message(train)
+    wagons_list(train)
   end
 
   def wagon_remove_menu
@@ -180,6 +214,24 @@ class MenuController
     end
   end
 
+  def wagon_occupy_space
+    train = set_train
+    if train.wagons.any?
+      wagon = set_wagon(train)
+
+      if train.instance_of?(CargoTrain)
+        puts 'Введите объем груза: (тонн)'
+        quantity = gets.to_i
+        wagon.add_cargo(quantity)
+      else
+        wagon.take_seat
+      end
+      wagons_list(train)
+    else
+      puts 'Не добавлено вагонов'
+    end
+  end
+
   def train_move_menu
     train = set_train
     puts 'Поезд движется: 1. Вперед  2. Назад'
@@ -191,9 +243,5 @@ class MenuController
       train.move_previous_station
       train_status_message(train)
     end
-  end
-
-  def station_train_list
-    stations_list(@stations)
   end
 end
