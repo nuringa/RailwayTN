@@ -33,9 +33,7 @@ class Train
   end
 
   def each_wagon(&block)
-    wagons.each do |wagon|
-      block.call(wagon)
-    end
+    wagons.each { |wagon| yield wagon }
   end
 
   def add_wagon(wagon)

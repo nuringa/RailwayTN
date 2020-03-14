@@ -27,9 +27,7 @@ class Station
   end
 
   def each_train(&block)
-    trains.each do |train|
-      block.call(train)
-    end
+    trains.each { |train| yield train }
   end
 
   def cargo_trains
