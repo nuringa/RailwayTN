@@ -26,16 +26,16 @@ class Station
     trains.delete(train)
   end
 
-  def each_train(&block)
+  def each_train
     trains.each { |train| yield train }
   end
 
   def cargo_trains
-    trains.select { |train| train.type == 'cargo'}
+    trains.select { |train| train.type == 'cargo' }
   end
 
   def passenger_trains
-    trains.select { |train| train.type == 'passenger'}
+    trains.select { |train| train.type == 'passenger' }
   end
 
   private

@@ -23,6 +23,7 @@ class CargoWagon < Wagon
   end
 
   def to_s(train)
-    "Вагон №#{train.wagons.index[self] + 1}, #{train.type}, #{free_space} т. свободно, #{occupied_volume} т. занято"
+    "Вагон №#{train.wagons.index[self] + 1}, #{train.type}, #{free_space} т. свободно," \
+    " #{occupied_volume} т. занято"
   end
 end

@@ -1,6 +1,23 @@
 require_relative 'menu_printer'
 
 class MenuController
+  MENU_CHOICE = {
+    1 => :station_add_menu,
+    2 => :train_add_menu,
+    3 => :route_add_menu,
+    4 => :route_edit_menu,
+    5 => :train_route_menu,
+    6 => :wagon_add_menu,
+    7 => :wagon_remove_menu,
+    8 => :wagon_occupy_space,
+    9 => :train_move_menu,
+    10 => :stations_list_menu,
+    11 => :train_list_menu,
+    12 => :wagon_list_menu,
+    13 => :seed,
+    14 => :exit
+  }.freeze
+
   def initialize
     @stations = []
     @trains = []
@@ -8,42 +25,13 @@ class MenuController
   end
 
   def menu_choice
-    puts 'Выберите нужный пункт меню:'
-    user_choice = gets.to_i
-
-    case user_choice
-    when 1
-      station_add_menu
-    when 2
-      train_add_menu
-    when 3
-      route_add_menu
-    when 4
-      route_edit_menu
-    when 5
-      train_route_menu
-    when 6
-      wagon_add_menu
-    when 7
-      wagon_remove_menu
-    when 8
-      wagon_occupy_space
-    when 9
-      train_move_menu
-    when 10
-      stations_list(@stations)
-    when 11
-      train_list_menu
-    when 12
-      wagon_list_menu
-    when 13
-      seed
-      seed_message
-    when 14
-      exit
-    else
-      puts 'Неправильная команда'
+    user_choice = 0
+    until (1..14).cover?(user_choice)
+      main_menu
+      user_choice = gets.to_i
     end
+
+    send(MENU_CHOICE[user_choice])
   end
 
   def seed
@@ -51,6 +39,7 @@ class MenuController
     @stations = seed.stations
     @trains = seed.trains
     @routes = seed.routes
+    seed_message
   end
 
   private
@@ -74,17 +63,21 @@ class MenuController
     begin
       puts 'Введите номер поезда'
       train_number = gets.chomp
-      case user_choice
-      when 1
-        @trains << Train.new(train_number, :passenger)
-      when 2
-        @trains << Train.new(train_number, :cargo)
-      end
+      add_train(train_number, user_choice)
     rescue RuntimeError => e
       puts e.message
       retry
     end
     puts "Добавлен поезд #{train_number}"
+  end
+
+  def add_train(train_number, user_choice)
+    case user_choice
+    when 1
+      @trains << Train.new(train_number, :passenger)
+    when 2
+      @trains << Train.new(train_number, :cargo)
+    end
   end
 
   def route_add_menu
@@ -116,6 +109,10 @@ class MenuController
     route_update_message(route)
   end
 
+  def stations_list_menu
+    stations_list(@stations)
+  end
+
   def delete_midstation_menu(route)
     puts 'Удалить промежуточную станцию:'
     stations_list(route.midway_stations)
@@ -126,24 +123,25 @@ class MenuController
   def route_edit_menu
     if @routes.any? && @stations.size > 2
       route = set_route
-      possible_mid_stations = @stations.select do |station|
-        station unless route.route_stations.include?(station)
-      end
-
-      puts 'Редактировать маршрут:'
-      puts '1. Добавить промежуточную станцию 2. Удалить промежуточную станцию 3. Показать маршрут'
+      edit_route_message
       user_choice = gets.to_i
 
       case user_choice
       when 1
-        add_midstation_menu(route, possible_mid_stations)
+        add_midstation_menu(route, possible_mid_stations(route))
       when 2
         delete_midstation_menu(route)
       when 3
         puts "Текущий маршрут: #{route.route_stations_list}"
       end
     else
-      puts 'Сначала создайте маршрут и промежуточные станции для добавления'
+      route_error_message
+    end
+  end
+
+  def possible_mid_stations(route)
+    @stations.select do |station|
+      station unless route.route_stations.include?(station)
     end
   end
 
@@ -158,11 +156,11 @@ class MenuController
     trains_station_list(station)
   end
 
-  def set_wagon(train)
+  def choose_wagon(train)
     wagons_count = train.wagons.size
     wagons_list(train)
     puts "Введите номер вагона(1-#{wagons_count})"
-    train.wagons.any? ? train.wagons[gets.to_i - 1] : return
+    train.wagons.any? ? train.wagons[gets.to_i - 1] : nil
   end
 
   def wagon_list_menu
@@ -174,7 +172,7 @@ class MenuController
     if @trains.any? && @routes.any?
       route = set_route
       train = set_train
-      train.set_route(route)
+      train.assign_route(route)
       train_status_message(train)
     else
       puts 'Создайте сначала поезд и маршрут'
@@ -217,7 +215,7 @@ class MenuController
   def wagon_occupy_space
     train = set_train
     if train.wagons.any?
-      wagon = set_wagon(train)
+      wagon = choose_wagon(train)
 
       if train.instance_of?(CargoTrain)
         puts 'Введите объем груза: (тонн)'
@@ -238,10 +236,9 @@ class MenuController
     user_choice = gets.to_i
     if user_choice == 1
       train.move_next_station
-      train_status_message(train)
     else
       train.move_previous_station
-      train_status_message(train)
     end
+    train_status_message(train)
   end
 end

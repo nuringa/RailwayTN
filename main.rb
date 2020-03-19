@@ -16,6 +16,5 @@ require_relative 'seed'
 menu = MenuController.new
 
 loop do
-  main_menu
   menu.menu_choice
 end

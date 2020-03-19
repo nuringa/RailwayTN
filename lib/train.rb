@@ -32,7 +32,7 @@ class Train
     self.speed = 0
   end
 
-  def each_wagon(&block)
+  def each_wagon
     wagons.each { |wagon| yield wagon }
   end
 
@@ -44,7 +44,7 @@ class Train
     @wagons.pop if not_moving?
   end
 
-  def set_route(route)
+  def assign_route(route)
     @route = route
     @route.first_station.add_train(self)
     @current_route_index = 0
@@ -83,9 +83,10 @@ class Train
   end
 
   private
+
   def validate!
     raise 'Номер поезда не соответствует формату' unless number =~ NUMBER_FORMAT
-    raise "Поезд с номером #{number} уже существует." if @@trains.has_key?(number)
+    raise "Поезд с номером #{number} уже существует." if @@trains.key?(number)
     raise 'Указан не верный тип поезда' unless type == 'Грузовой' || type == 'Пассажирский'
   end
 

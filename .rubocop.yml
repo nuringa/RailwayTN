@@ -1,0 +1,24 @@
+Documentation:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 99
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Lint/DuplicateMethods:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
+  ExcludedMethods: [main_menu]

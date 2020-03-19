@@ -26,15 +26,19 @@ class Route
   end
 
   def route_stations_list
-    "#{first_station.name}->" + midway_stations.map { |station| "#{station.name}" }
+    "#{first_station.name}->" + midway_stations.map { |station| station.name.to_s }
                                                .join('->') + "->#{last_station.name}"
   end
 
   private
+
   def validate!
-    raise 'Первая и последняя остановки маршрута не могут совпадать' if first_station == last_station
-    unless Station.all.include?(first_station && last_station)
-      raise 'Невозможно добавить в маршрут. Cтанции не существует!'
+    if first_station == last_station
+      raise 'Первая и последняя остановки маршрута не могут совпадать'
     end
+
+    return if Station.all.include?(first_station && last_station)
+
+    raise 'Невозможно добавить в маршрут. Cтанции не существует!'
   end
 end

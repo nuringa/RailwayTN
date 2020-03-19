@@ -18,4 +18,3 @@ class PassengerWagon < Wagon
     @occupied_seats == space_total
   end
 end
-

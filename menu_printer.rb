@@ -1,4 +1,5 @@
 def main_menu
+  puts 'Выберите нужный пункт меню:'
   puts 'ЖД меню:'
   puts '1. Создать станцию'
   puts '2. Создать поезд'
@@ -41,9 +42,15 @@ def wagons_list(train)
   puts train
   train.each_wagon do |wagon|
     if wagon.instance_of?(CargoWagon)
-      puts "Груз. вагон #{train.wagons.index(wagon) + 1}. Свободно: #{wagon.free_space}т. Занято: #{wagon.occupied_volume}т." unless wagon.full?
+      unless wagon.full?
+        puts "Груз. вагон #{train.wagons.index(wagon) + 1}. Свободно: #{wagon.free_space}т. " \
+        "Занято: #{wagon.occupied_volume}т."
+      end
     else
-      puts "Пассажирский вагон №#{train.wagons.index(wagon) + 1}. Свободно: #{wagon.free_seats}мест. Занято: #{wagon.occupied_seats}мест." unless wagon.full?
+      unless wagon.full?
+        puts "Пассажирский вагон №#{train.wagons.index(wagon) + 1}. Свободно: " \
+        "#{wagon.free_seats}мест. Занято: #{wagon.occupied_seats}мест."
+      end
     end
   end
 end
@@ -72,11 +79,13 @@ end
 
 def train_with_wagons_message(train)
   type = train.instance_of?(CargoTrain) ? 'тонн каждый' : 'мест каждый'
-  puts "В поезде #{train.number}:#{train.type} - #{train.wagons.size} вагонов, #{train.wagons.first.space_total} #{type}"
+  puts "В поезде #{train.number}:#{train.type} - #{train.wagons.size} вагонов," \
+  " #{train.wagons.first.space_total} #{type}"
 end
 
 def train_status_message(train)
-  puts "Поезд #{train.number} едет по маршруту #{train.route.route_stations_list} и прибыл на станцию #{train.current_station.name}"
+  puts "Поезд #{train.number} едет по маршруту #{train.route.route_stations_list}" \
+  " и прибыл на станцию #{train.current_station.name}"
 end
 
 def no_space_message
@@ -85,4 +94,13 @@ end
 
 def seed_message
   puts 'Тестовые данный созданы.'
+end
+
+def edit_route_message
+  puts 'Редактировать маршрут:'
+  puts '1. Добавить промежуточную станцию 2. Удалить промежуточную станцию 3. Показать маршрут'
+end
+
+def route_error_message
+  puts 'Сначала создайте маршрут и промежуточные станции для добавления'
 end
