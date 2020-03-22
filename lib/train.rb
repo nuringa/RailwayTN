@@ -1,12 +1,16 @@
 class Train
   include Manufacturer
   include InstanceCounter
-  include Validator
+  include Validation
 
   attr_accessor :speed
   attr_reader :number, :wagons, :route, :type
 
   NUMBER_FORMAT = /^[a-z0-9а-я]{3}-?[a-z0-9а-я]{2}$/i.freeze
+
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :type, String
 
   @@trains = {}
 
@@ -83,12 +87,6 @@ class Train
   end
 
   private
-
-  def validate!
-    raise 'Номер поезда не соответствует формату' unless number =~ NUMBER_FORMAT
-    raise "Поезд с номером #{number} уже существует." if @@trains.key?(number)
-    raise 'Указан не верный тип поезда' unless type == 'Грузовой' || type == 'Пассажирский'
-  end
 
   def not_moving?
     speed.zero?

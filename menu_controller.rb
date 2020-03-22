@@ -15,7 +15,8 @@ class MenuController
     11 => :train_list_menu,
     12 => :wagon_list_menu,
     13 => :seed,
-    14 => :exit
+    14 => :test_accessors,
+    15 => :exit
   }.freeze
 
   def initialize
@@ -45,9 +46,14 @@ class MenuController
   private
 
   def station_add_menu
-    puts 'Введите название:'
-    station_name = gets.chomp
-    @stations << Station.new(station_name)
+    begin
+      puts 'Введите название:'
+      station_name = gets.chomp
+      @stations << Station.new(station_name)
+    rescue RuntimeError => e
+      puts e.message
+      retry
+    end
     puts "Добавлена станция #{station_name}"
   end
 
@@ -83,13 +89,18 @@ class MenuController
   def route_add_menu
     if @stations.size > 1
       stations_list(@stations)
-      puts 'Выберите начальную станцию:'
-      user_first_station = gets.to_i
-      puts 'Выберите конечную станцию:'
-      user_last_station = gets.to_i
+      begin
+        puts 'Выберите начальную станцию:'
+        user_first_station = gets.to_i
+        puts 'Выберите конечную станцию:'
+        user_last_station = gets.to_i
 
-      route = Route.new(@stations[user_first_station - 1], @stations[user_last_station - 1])
-      @routes << route
+        route = Route.new(@stations[user_first_station - 1], @stations[user_last_station - 1])
+        @routes << route
+      rescue RuntimeError => e
+        puts e.message
+        retry
+      end
       puts "Маршрут #{route.route_name} успешно создан."
     else
       puts 'Сначала создайте станции для маршрута (не меньше 2)'
@@ -240,5 +251,19 @@ class MenuController
       train.move_previous_station
     end
     train_status_message(train)
+  end
+
+  def test_accessors
+    w = Wagon.new
+    puts "Создна новый вагон #{w}"
+    w.manufacturer = 'Cola'
+    puts "Производитель: #{w.manufacturer}"
+    w.manufacturer = 'Pepsi'
+    puts "Новый производитель: #{w.manufacturer}"
+
+    puts "История производителей: #{w.manufacturer_history.join(', ')}"
+
+    puts "Тестируем strong accessors допустимый формат #{w.test_strong = 'kslslsl'}"
+    puts "Тестируем strong accessors недопустимый формат #{w.test_strong = 333}"
   end
 end

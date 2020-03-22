@@ -1,3 +1,6 @@
 module Manufacturer
-  attr_accessor :manufacturer
+  extend Accessors
+
+  attr_accessor_with_history :manufacturer
+  strong_attr_accessor('test_strong', String)
 end

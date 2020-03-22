@@ -1,6 +1,7 @@
 require_relative 'lib/instance_counter'
+require_relative 'lib/accessors'
 require_relative 'lib/manufacturer'
-require_relative 'lib/validator'
+require_relative 'lib/validation'
 require_relative 'lib/train'
 require_relative 'lib/cargo_train'
 require_relative 'lib/passenger_train'
