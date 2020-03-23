@@ -1,9 +1,7 @@
 class PassengerTrain < Train
-  def initialize(number)
-    super
-  end
+  private
 
-  def type
-    'Пассажирский'
+  def type?(wagon)
+    wagon.instance_of?(PassengerWagon)
   end
 end

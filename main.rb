@@ -1,3 +1,7 @@
+require_relative 'lib/instance_counter'
+require_relative 'lib/accessors'
+require_relative 'lib/manufacturer'
+require_relative 'lib/validation'
 require_relative 'lib/train'
 require_relative 'lib/cargo_train'
 require_relative 'lib/passenger_train'
@@ -13,6 +17,5 @@ require_relative 'seed'
 menu = MenuController.new
 
 loop do
-  main_menu
   menu.menu_choice
 end

@@ -1,9 +1,23 @@
 class Station
+  include InstanceCounter
+  include Validation
+
   attr_reader :trains, :name
+
+  validate :name, :presence
+
+  @@stations = []
+
+  def self.all
+    @@stations
+  end
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
+    @@stations << self
+    register_instance
   end
 
   def add_train(train)
@@ -14,11 +28,15 @@ class Station
     trains.delete(train)
   end
 
-  def cargo_trains
-    trains.select { |train| train.type == 'cargo'}
+  def each_train
+    trains.each { |train| yield train }
   end
 
-  def passanger_trains
-    trains.select { |train| train.type == 'passenger'}
+  def cargo_trains
+    trains.select { |train| train.type == 'cargo' }
+  end
+
+  def passenger_trains
+    trains.select { |train| train.type == 'passenger' }
   end
 end
